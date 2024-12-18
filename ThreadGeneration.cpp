@@ -57,7 +57,7 @@ void* ThreadInitialization(const char* version,char CommandArray[LENS],int threa
                         float BriggsParam[4],int DoNonBiotin,int DoBiotin,int Duplicates,
                         double mutationrate, size_t referencevariations, int generations,char* VariationfileDump,
                         const char *VariantFile,int HeaderIndivIdx,const char* NameIndiv,const char* VCFfileDump,int CaptureVCF,int linkage,
-                        float IndelFuncParam[4],int DoIndel,const char* IndelDumpFile){
+                        float IndelFuncParam[4],int DoIndel,const char* IndelDumpFile, size_t genome_size, int fileAppend){
 
 
   /*
@@ -158,6 +158,10 @@ void* ThreadInitialization(const char* version,char CommandArray[LENS],int threa
   
   fprintf(stderr, "\t-> Done reading in the reference file, walltime used =  %.2f sec\n", (float)(time(NULL) - t_ref));
   
+  // rejust reads according reffasta
+  fprintf(stderr, "current ref fasta genome size: %ld\n", reffasta->seq_l_total);
+  reads = reads * reffasta->seq_l_total / genome_size;
+  fprintf(stderr, "Adjusted Reads: %ld\n", reads);
 
   /*
 

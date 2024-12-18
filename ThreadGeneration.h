@@ -27,6 +27,6 @@ void* ThreadInitialization(const char* version,char CommandArray[LENS],int threa
                         float BriggsParam[4],int DoNonBiotin,int DoBiotin,int Duplicates,
                         double mutationrate, size_t referencevariations, int generations,char* VariationfileDump,
                         const char *VariantFile,int HeaderIndivIdx,const char* NameIndiv,const char* VCFfileDump,int CaptureVCF,int linkage,
-                        float IndelFuncParam[4],int DoIndel,const char* IndelDumpFile);
+                        float IndelFuncParam[4],int DoIndel,const char* IndelDumpFile,size_t genome_size, int fileAppend);
 
 #endif

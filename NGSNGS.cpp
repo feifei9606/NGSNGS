@@ -254,22 +254,23 @@ int main(int argc,char **argv){
     //fprintf(stderr,"NOW IM AFTER NREADS %zu \n",mypars->nreads);
     
     //now compute the number of reads required across all threads depending on genome size when providing a depth of coverage, NB. when -c > 1 the breadth of coverage will also converge towards 1 due to uniform sampling of positions 
-    if (readcov > 0.0){
-      size_t genome_size = 0;
+    size_t genome_size = 0;
 
-      for (int i = 0; i < chr_total; i++){
-        const char *chr_name = faidx_iseq(seq_ref,i);
-        int chr_len = faidx_seq_len(seq_ref,chr_name);
-        genome_size += chr_len;
-      }
-      if(OutputFormat==fqT|| OutputFormat== fqgzT ||OutputFormat==samT ||OutputFormat==bamT|| OutputFormat== cramT){
-        if (mean_length >= readcycle){mean_length = (double)readcycle;}
-      }
+    for (int i = 0; i < chr_total; i++){
+      const char *chr_name = faidx_iseq(seq_ref,i);
+      int chr_len = faidx_seq_len(seq_ref,chr_name);
+      genome_size += chr_len;
+    }
+    // fprintf(stderr, "genome_size: %ld", genome_size);
+    if (readcov > 0.0){
       if (mypars->seq_type == PE){
-        mypars->nreads = ((readcov*genome_size)/mean_length)/2;
+        if(OutputFormat==fqT|| OutputFormat== fqgzT ||OutputFormat==samT ||OutputFormat==bamT|| OutputFormat== cramT){
+          if (mean_length >= readcycle){mean_length = (double)readcycle;}
+        }
+        mypars->nreads = ((readcov*genome_size)/readcycle)/2;
       }
       else{
-        mypars->nreads = (readcov*genome_size)/mean_length;
+        mypars->nreads = (readcov*genome_size)/readcycle;
       }
     }
 
@@ -418,7 +419,7 @@ int main(int argc,char **argv){
       PMDParam,DoNonBiotin,DoBiotin,mypars->Duplicates,
       mypars->mutationrate,mypars->referencevariations,mypars->generations,mypars->VariantDumpFile,
       mypars->vcffile,mypars->HeaderIndiv,mypars->NameIndiv,mypars->VCFDumpFile,mypars->CaptureVCF,mypars->linkage,
-      IndelFuncParam,DoIndel,mypars->IndelDumpFile);
+      IndelFuncParam,DoIndel,mypars->IndelDumpFile,genome_size, mypars->fileAppend);
 
     /*
     NGSNGS overall - @param const char* version,char CommandArray[LENS],int thread_no,int threadwriteno,size_t BufferLength
