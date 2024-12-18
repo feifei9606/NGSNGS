@@ -325,7 +325,8 @@ void* ThreadInitialization(const char* version,char CommandArray[LENS],int threa
         }
         break;
       case fqgzT:
-        mode = "w";
+        if(fileAppend==1) mode = "a";
+        else mode = "w";
         if(SE==SeqType)
           suffix1 = ".fq.gz";
         else{

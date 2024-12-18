@@ -40,6 +40,7 @@ argStruct *getpars(int argc,char ** argv){
   mypars->BedFile = NULL;
   mypars->flankingregion = 30;
   mypars->MaskBed = 0;
+  mypars->fileAppend = 0;
   mypars->CaptureVCF = 0;
   mypars->linkage = 0;
 
@@ -189,6 +190,9 @@ argStruct *getpars(int argc,char ** argv){
     }
     else if(strcasecmp("-na",*argv)==0 || strcasecmp("--noalign",*argv)==0){
       mypars->Align = 0;
+    }
+    else if(strcasecmp("--fileappend",*argv)==0){
+      mypars->fileAppend = 1;
     }
     else if(strcasecmp("-m",*argv)==0 || strcasecmp("--model",*argv)==0){
       ++argv;

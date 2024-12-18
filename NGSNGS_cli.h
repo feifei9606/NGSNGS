@@ -57,6 +57,7 @@ typedef struct{
   int generations;           //mutation rate for a certain number of generations which alters the reference genome
   size_t referencevariations; //adding a fixed number of variations to the reference genome
   int MaskBed;
+  int fileAppend;
   int CaptureVCF;              //filename for bcf
   int linkage;
 }argStruct;
