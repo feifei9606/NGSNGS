@@ -121,6 +121,7 @@ void* Sampling_threads(void *arg) {
   int refCp1 = 0;int refCTp1 = 0;int refCp2 = 0;int refCTp2 = 0;
 
   int sampled_skipped = 0;
+  int sampled_skipped_gc = 0;
   int whileiter=0;
 
   // sampling DNA molecules and simulate sequencing reads  
@@ -210,6 +211,31 @@ void* Sampling_threads(void *arg) {
       memset(FragmentSequence,0,strlen(FragmentSequence));
       sampled_skipped++;
       continue;
+    }
+
+    // GC bias (-gcbias): rejection sampling against a fragment-GC -> acceptance-weight table.
+    // The whole biological fragment is scored (not the trimmed read), because GC bias acts on
+    // the library molecule; both mates therefore share the same weight.
+    if(struct_obj->gcbias != NULL){
+      // Score the two read-sized ends of the fragment (= the sequences that will become R1 and R2),
+      // which is the same quantity the weight table was calibrated on. Using the whole fragment
+      // instead would under-apply the bias, because long fragments have a narrower GC distribution.
+      int flen = (int) strlen(FragmentSequence);
+      int seg = struct_obj->maxreadlength > 0 ? struct_obj->maxreadlength : flen;
+      long gc_n = 0, len_n = 0;
+      for(int i = 0; i < flen; i++){
+        if(i >= seg && i < flen - seg) continue;
+        char c = FragmentSequence[i];
+        int isgc = (c == 'G' || c == 'C' || c == 'g' || c == 'c');
+        if(isgc) gc_n++;
+        if(isgc || c == 'A' || c == 'T' || c == 'a' || c == 't') len_n++;
+      }
+      double gc_frac = (len_n > 0) ? ((double) gc_n / (double) len_n) : 0.0;
+      if(mrand_pop(rand_alloc) > gc_bias_weight(struct_obj->gcbias, gc_frac)){
+        memset(FragmentSequence,0,strlen(FragmentSequence));
+        sampled_skipped_gc++;
+        continue;
+      }
     }
 
     //Generating random ID unique for each read output
@@ -761,6 +787,8 @@ void* Sampling_threads(void *arg) {
   }
 
   fprintf(stderr,"\t-> Extracted fragment but skipped due to 'N' %d \n",sampled_skipped);
+  if(struct_obj->gcbias != NULL)
+    fprintf(stderr,"\t-> Extracted fragment but skipped due to GC bias (-gcbias) %d \n",sampled_skipped_gc);
 
   // free all memory for created sequences
   for(int j=0; j<struct_obj->MaximumLength;j++){

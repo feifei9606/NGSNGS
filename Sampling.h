@@ -3,6 +3,7 @@
 #define LENS 10000
 #include "NGSNGS_cli.h"
 #include "fasta_sampler.h"
+#include "gcbias.h"
 
 struct Parsarg_for_Sampling_thread{
   fasta_sampler *reffasta;
@@ -74,6 +75,8 @@ struct Parsarg_for_Sampling_thread{
 
   int bedfilesample;
   int VCFcapture;
+
+  gc_bias_t *gcbias;   // GC acceptance-weight table from -gcbias (NULL = disabled)
 };
 
 void* Sampling_threads(void *arg);

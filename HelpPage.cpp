@@ -64,6 +64,10 @@ int HelpPage(FILE *fp){
   fprintf(fp,"\t-name  | --headername: \t\t The name of an individual defined in bcf header from -vcf/-bcf input file, conflicts with -id.\n");
   fprintf(fp,"\t\t e.g -name HG00096\t\t Individual from the provided vcf file as defined in the header.\n");
   fprintf(fp,"\t-DumpVCF:	\t\t The prefix of an internally generated fasta file, containing the sequences representing the haplotypes with the variations from the provided vcf file (-vcf|-bcf), for diploid individuals the fasta file contains two copies of the reference genome with the each allelic genotype.\n");
+  fprintf(fp,"\t-gcbias | --gcbias: \t\t Two column file <GC fraction 0-1> <acceptance weight 0-1> for GC bias rejection sampling, default = off\n");
+  fprintf(fp,"\t\t\t\t\t Fragments are drawn uniformly as usual, then accepted with probability w(fragment GC).\n");
+  fprintf(fp,"\t\t\t\t\t Weights are linearly interpolated between rows; outside the tabulated range the edge weight is used.\n");
+  fprintf(fp,"\t\t\t\t\t Skipped fragments are counted separately in the stderr summary.\n");
   fprintf(fp,"\t-cap | --capture: \t\t\t Simulates sequence reads solely from regions with variants provided by -vcf input, each variant is treated as an indepdent region\n");
   fprintf(fp,"\t-linkage | --linkagedisequilibrium: \t\t\t Simulates sequence reads from regions with variants provided by -vcf in close proximity as being in LD, by simulating variants together\n");
   fprintf(fp,"\nStochastic Variations: \n\n");

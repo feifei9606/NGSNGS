@@ -57,7 +57,12 @@ void* ThreadInitialization(const char* version,char CommandArray[LENS],int threa
                         float BriggsParam[4],int DoNonBiotin,int DoBiotin,int Duplicates,
                         double mutationrate, size_t referencevariations, int generations,char* VariationfileDump,
                         const char *VariantFile,int HeaderIndivIdx,const char* NameIndiv,const char* VCFfileDump,int CaptureVCF,int linkage,
-                        float IndelFuncParam[4],int DoIndel,const char* IndelDumpFile, size_t genome_size, int fileAppend){
+                        float IndelFuncParam[4],int DoIndel,const char* IndelDumpFile, size_t genome_size, int fileAppend,
+                        const char* GCfile){
+
+  // GC bias acceptance-weight table (-gcbias); shared read-only across sampling threads.
+  // gc_bias_read() returns NULL both when no file was given and when the file cannot be used.
+  gc_bias_t *gcbias = gc_bias_read(GCfile);
 
 
   /*
@@ -507,6 +512,7 @@ void* ThreadInitialization(const char* version,char CommandArray[LENS],int threa
       struct_for_threads[i].simmode = simmode;
       struct_for_threads[i].bedfilesample = bedfilesample;
       struct_for_threads[i].VCFcapture = vcfcapture;
+      struct_for_threads[i].gcbias = gcbias;
 
       // Sequence alteration models
         // 1) nucleotide quality score and sequencing errors,  

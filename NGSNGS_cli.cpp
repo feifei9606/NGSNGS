@@ -62,6 +62,7 @@ argStruct *getpars(int argc,char ** argv){
   mypars->M3outname = NULL;
   // 4) Bcf file and variation incorporation
   mypars->vcffile = NULL;
+  mypars->gcbfile = NULL;
 
   // 5) random variations to the reference genome
   mypars->mutationrate = 0.0;
@@ -118,6 +119,9 @@ argStruct *getpars(int argc,char ** argv){
     }
     else if(strcasecmp("-vcf",*argv)==0 || strcasecmp("-bcf",*argv)==0){
       mypars->vcffile = strdup(*(++argv));
+    }
+    else if(strcasecmp("-gcbias",*argv)==0 || strcasecmp("--gcbias",*argv)==0){
+      mypars->gcbfile = strdup(*(++argv));
     }
     else if(strcasecmp("-t",*argv)==0 || strcasecmp("--threads",*argv)==0){
       mypars->SamplThreads = atoi(*(++argv));
@@ -392,6 +396,7 @@ void argStruct_destroy(argStruct *mypars){
   if(mypars->BedFile)
     free(mypars->BedFile);
   free(mypars->vcffile);
+  free(mypars->gcbfile);
   free(mypars->Adapter1);
   free(mypars->Adapter2);
   free(mypars->QualProfile1);

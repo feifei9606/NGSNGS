@@ -60,6 +60,7 @@ typedef struct{
   int fileAppend;
   int CaptureVCF;              //filename for bcf
   int linkage;
+  char *gcbfile;              //GC bias acceptance-weight table, -gcbias <file>
 }argStruct;
 argStruct *getpars(int argc,char ** argv);
 void argStruct_destroy(argStruct *mypars);

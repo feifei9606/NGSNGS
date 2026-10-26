@@ -419,7 +419,7 @@ int main(int argc,char **argv){
       PMDParam,DoNonBiotin,DoBiotin,mypars->Duplicates,
       mypars->mutationrate,mypars->referencevariations,mypars->generations,mypars->VariantDumpFile,
       mypars->vcffile,mypars->HeaderIndiv,mypars->NameIndiv,mypars->VCFDumpFile,mypars->CaptureVCF,mypars->linkage,
-      IndelFuncParam,DoIndel,mypars->IndelDumpFile,genome_size, mypars->fileAppend);
+      IndelFuncParam,DoIndel,mypars->IndelDumpFile,genome_size, mypars->fileAppend, mypars->gcbfile);
 
     /*
     NGSNGS overall - @param const char* version,char CommandArray[LENS],int thread_no,int threadwriteno,size_t BufferLength
